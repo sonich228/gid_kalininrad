@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Ботанический сад | Гид по Калининграду</title>
+    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/sonich228/sonich228/refs/heads/main/dost2.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FFFFFF;
+            color: #2C2C2C;
+        }
+        :root {
+            --orange-primary: #F97316;
+            --orange-dark: #EA580C;
+            --orange-light: #FFEDD5;
+            --orange-soft: #FFF7ED;
+            --gray-text: #4B5563;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+        .navbar {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 10px 0;
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 12px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 15px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.3px;
+            color: var(--orange-primary);
+        }
+        .logo i {
+            font-size: 1.8rem;
+            color: var(--orange-primary);
+        }
+        .logo span {
+            background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* БУРГЕР-КНОПКА */
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 101;
+        }
+        .burger-menu span {
+            width: 100%;
+            height: 3px;
+            background: var(--orange-primary);
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #2d3e50;
+            transition: 0.2s;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+        .nav-links a:hover {
+            color: var(--orange-primary);
+            border-bottom-color: var(--orange-primary);
+        }
+
+        /* Мобильное меню */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+            z-index: 200;
+            padding: 80px 24px 30px;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .mobile-menu.active { right: 0; }
+        .mobile-menu a {
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #2d3e50;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            transition: 0.2s;
+        }
+        .mobile-menu a:hover {
+            color: var(--orange-primary);
+            padding-left: 10px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--orange-primary);
+        }
+        .mobile-weather {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--orange-light);
+            padding: 8px 12px;
+            border-radius: 40px;
+            margin-top: 20px;
+            font-size: 0.8rem;
+        }
+        .mobile-weather i { color: var(--orange-primary); }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 150;
+            display: none;
+        }
+        .overlay.active { display: block; }
+
+        @media (max-width: 860px) {
+            .nav-links { display: none; }
+            .burger-menu { display: flex; }
+        }
+
+        /* Хлебные крошки */
+        .breadcrumbs {
+            margin: 15px 0 10px;
+            font-size: 0.8rem;
+            color: var(--gray-text);
+        }
+        .breadcrumbs a {
+            color: var(--orange-primary);
+            text-decoration: none;
+        }
+        .breadcrumbs a:hover { text-decoration: underline; }
+
+        .back-link {
+            display: inline-block;
+            margin: 5px 0 15px;
+            color: var(--orange-primary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        .back-link:hover { text-decoration: underline; }
+        
+        /* Слайдер */
+        .gallery-slider {
+            border-radius: 24px;
+            overflow: hidden;
+            position: relative;
+        }
+        .slider-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        .slider-track {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .slider-slide {
+            min-width: 100%;
+            height: 400px;
+        }
+        .slider-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .slider-btn:hover { background: var(--orange-primary); }
+        .slider-prev { left: 10px; }
+        .slider-next { right: 10px; }
+        .slider-dots {
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            z-index: 10;
+        }
+        .slider-dot {
+            width: 8px;
+            height: 8px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .slider-dot.active {
+            background: var(--orange-primary);
+            width: 20px;
+            border-radius: 10px;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 28px;
+            overflow: hidden;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.1);
+            margin: 0 0 30px;
+        }
+        .detail-info { padding: 24px; }
+        .detail-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1e293b;
+        }
+        
+        .info-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 8px;
+        }
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .stars { display: flex; gap: 3px; color: #fbbf24; }
+        .stars i { font-size: 0.9rem; }
+        .rating-value { font-weight: 700; font-size: 1rem; }
+        .rating-count { font-size: 0.8rem; color: var(--gray-text); }
+        .hours { color: var(--orange-primary); font-weight: 500; font-size: 0.85rem; }
+        .address {
+            font-size: 0.85rem;
+            color: var(--gray-text);
+            margin-bottom: 20px;
+        }
+        
+        .detail-description {
+            font-size: 0.95rem;
+            line-height: 1.55;
+            color: var(--gray-text);
+            margin-bottom: 16px;
+        }
+        
+        .contacts-card {
+            background: var(--orange-soft);
+            border-radius: 20px;
+            padding: 18px;
+            margin: 20px 0 20px;
+        }
+        .contacts-title {
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 0.95rem;
+        }
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+        .contact-item i { width: 22px; color: var(--orange-primary); }
+        .contact-item a { color: var(--orange-primary); text-decoration: none; }
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 12px;
+        }
+        .social-links a {
+            color: var(--orange-primary);
+            font-size: 1.2rem;
+        }
+        .social-links a:hover { color: var(--orange-dark); }
+
+        .detail-stats {
+            display: flex;
+            gap: 20px;
+            padding: 15px 0;
+            border-top: 1px solid #f0f0f0;
+            border-bottom: 1px solid #f0f0f0;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            color: var(--orange-primary);
+            cursor: pointer;
+        }
+        .stat.liked i { color: #ef4444; }
+        
+        .map-container {
+            width: 100%;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+        .map-container iframe {
+            width: 100%;
+            height: 400px;
+            border: none;
+            display: block;
+        }
+
+        .reviews-section {
+            background: var(--orange-soft);
+            border-radius: 28px;
+            padding: 24px;
+            margin-bottom: 50px;
+            scroll-margin-top: 100px;
+        }
+        .reviews-title { font-size: 1.3rem; margin-bottom: 20px; }
+        .reviews-list {
+            margin-bottom: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .review-item {
+            background: white;
+            border-radius: 18px;
+            padding: 14px;
+            margin-bottom: 12px;
+        }
+        .review-author { font-weight: 600; color: var(--orange-primary); margin-bottom: 6px; font-size: 0.9rem; }
+        .review-text { font-size: 0.85rem; color: var(--gray-text); line-height: 1.45; }
+        .review-date { font-size: 0.65rem; color: #aaa; margin-top: 6px; }
+        .review-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e2e8f0;
+            border-radius: 18px;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
+        }
+        .review-form button {
+            background: var(--orange-primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 0.85rem;
+        }
+        .success-msg {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 8px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            font-size: 0.8rem;
+        }
+
+        /* Плавающая иконка авторизации — СЛЕВА */
+        .float-auth {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            z-index: 1000;
+        }
+        .auth-icon {
+            width: 55px;
+            height: 55px;
+            background: var(--orange-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            color: white;
+            font-size: 1.6rem;
+        }
+        .auth-icon:hover { transform: scale(1.05); background: var(--orange-dark); }
+        .auth-popup {
+            position: absolute;
+            bottom: 70px;
+            left: 0;
+            width: 260px;
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: none;
+        }
+        .auth-popup.active { display: block; }
+        /* Аватар в кружочке */
+        .avatar-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 10px;
+            display: block;
+            border: 3px solid var(--orange-primary);
+        }
+        .auth-popup h4 { font-size: 1rem; margin-bottom: 8px; text-align: center; }
+        .auth-popup p { font-size: 0.75rem; margin-bottom: 12px; text-align: center; }
+        .btn-auth { width: 100%; margin-bottom: 8px; text-align: center; padding: 8px; font-size: 0.8rem; }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--orange-primary);
+            border-radius: 40px;
+            color: var(--orange-primary);
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: var(--orange-primary);
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 25px;
+            max-width: 360px;
+            width: 90%;
+        }
+        .modal-content h3 { margin-bottom: 15px; font-size: 1.3rem; }
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        .close-modal { float: right; font-size: 1.3rem; cursor: pointer; }
+        .footer {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 25px 0;
+            text-align: center;
+            font-size: 0.75rem;
+        }
+        
+        @media (max-width: 768px) {
+            .slider-slide { height: 220px; }
+            .detail-title { font-size: 1.5rem; }
+            .info-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+            .detail-info { padding: 18px; }
+            .contacts-card { padding: 14px; }
+            .map-container iframe { height: 250px; }
+            .slider-btn { width: 32px; height: 32px; font-size: 1rem; }
+            .float-auth { bottom: 15px; left: 15px; }
+            .auth-icon { width: 48px; height: 48px; font-size: 1.4rem; }
+            .detail-stats { gap: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="navbar">
+        <div class="container nav-container">
+            <div class="logo">
+                <i class="fas fa-map-marked-alt"></i>
+                <span>КалининградГид</span>
+            </div>
+            <div class="burger-menu" id="burgerBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links">
+                <a href="diplombir.html">Главная</a>
+                <a href="places.html">Туристические места</a>
+                <a href="rest.html">Рестораны и кафе</a>
+                <a href="suv.html">Сувениры</a>
+                <a href="otel.html">Отели</a>
+                <a href="raz.html">Развлечения</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="close-btn" id="closeMenuBtn">&times;</div>
+        <a href="diplombir.html">Главная</a>
+        <a href="places.html">Туристические места</a>
+        <a href="rest.html">Рестораны и кафе</a>
+        <a href="suv.html">Сувениры</a>
+        <a href="otel.html">Отели</a>
+        <a href="raz.html">Развлечения</a>
+        
+        <div class="mobile-weather">
+            <i class="fas fa-sun"></i>
+            <span>+17°C</span>
+            <span><i class="fas fa-wind"></i> 5 m/s</span>
+            <span><i class="fas fa-tint"></i> 76%</span>
+        </div>
+    </div>
+    <div class="overlay" id="overlay"></div>
+
+    <main class="container">
+        <div class="breadcrumbs">
+            <a href="diplombir.html">Главная</a> / 
+            <a href="raz.html">Развлечения</a> / 
+            <span>Ботанический сад Калининграда</span>
+        </div>
+        
+        <a href="raz.html" class="back-link"><i class="fas fa-arrow-left"></i> Назад к развлечениям</a>
+        
+        <div class="detail-card">
+            <div class="gallery-slider">
+                <div class="slider-container">
+                    <div class="slider-track" id="sliderTrack">
+                        <!-- Замените src на свои картинки -->
+                        <div class="slider-slide"><img src="https://omega-rent39.ru/wp-content/uploads/2022/08/botanicheskji-sad.jpeg" alt="Ботанический сад 1"></div>
+                        <div class="slider-slide"><img src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/1d/2b/e9/55/caption.jpg?w=1200&h=-1&s=1" alt="Ботанический сад 2"></div>
+                        <div class="slider-slide"><img src="https://upload.wikimedia.org/wikipedia/commons/1/17/Bot_gard_2352.JPG" alt="Ботанический сад 3"></div>
+                        <div class="slider-slide"><img src="https://zabroshki39.ru/upload/information_system_16/1/3/1/item_1314/property_5409.jpg" alt="Ботанический сад 4"></div>
+                    </div>
+                    <button class="slider-btn slider-prev" id="sliderPrev"><i class="fas fa-chevron-left"></i></button>
+                    <button class="slider-btn slider-next" id="sliderNext"><i class="fas fa-chevron-right"></i></button>
+                    <div class="slider-dots" id="sliderDots"></div>
+                </div>
+            </div>
+
+            <div class="detail-info">
+                <h1 class="detail-title">Ботанический сад Калининграда</h1>
+                
+                <div class="info-row">
+                    <div class="rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="rating-value">4.8</span>
+                        <span class="rating-count">2 103 оценки</span>
+                    </div>
+                    <div class="hours">
+                        <i class="far fa-clock"></i> 10:00–19:00 (касса до 18:30)
+                    </div>
+                </div>
+                <div class="address">
+                    <i class="fas fa-map-marker-alt"></i> г. Калининград, ул. Лесная, 12
+                </div>
+
+                <p class="detail-description">
+                    Ботанический сад Калининграда — это настоящий оазис природы в черте города, основанный в 1904 году. Сад является структурным подразделением Балтийского федерального университета имени Иммануила Канта и служит важной научной, образовательной и рекреационной площадкой.
+                </p>
+                <p class="detail-description">
+                    На территории в 13,5 гектаров представлено более 2500 видов и форм растений со всего мира: от редких деревьев и кустарников до экзотических цветов и трав. Особую ценность представляют дендрологическая коллекция, розарий, японский сад и оранжерея с тропическими растениями. Весной сад утопает в цветущих магнолиях, сакурах и рододендронах, а осенью радует буйством красок листвы.
+                </p>
+                <p class="detail-description">
+                    Для посетителей проводятся экскурсии, лекции по ботанике и мастер-классы по садоводству. Сад — идеальное место для тихих прогулок, семейного отдыха и фотосессий. Здесь оборудованы удобные дорожки, скамейки и беседки. Вход платный, но стоимость билета символическая, а для студентов и пенсионеров действуют льготы.
+                </p>
+
+                <div class="contacts-card">
+                    <div class="contacts-title">📞 Контакты и соцсети</div>
+                    <div class="contact-item">
+                        <i class="fas fa-globe"></i>
+                        <a href="https://botsad.kantiana.ru" target="_blank">botsad.kantiana.ru</a>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-phone-alt"></i>
+                        <a href="tel:+74012345678">+7 (4012) 34-56-78</a>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://vk.com/botsad_kaliningrad" target="_blank"><i class="fab fa-vk"></i></a>
+                    </div>
+                </div>
+                
+                <div class="detail-stats">
+                    <div class="stat" id="likeBtn"><i class="far fa-heart"></i> <span id="likeCount">3150</span></div>
+                    <div class="stat" id="reviewsBtn"><i class="fas fa-comment"></i> <span id="reviewsCount">423</span></div>
+                    <div class="stat"><i class="fas fa-ticket-alt"></i> <span>Билет: 250 ₽, льготный — 150 ₽</span></div>
+                </div>
+
+                <div class="map-container">
+                    <script type="text/javascript" charset="utf-8" async src="https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3A388c3ac3da5a6bc7cc003e1736e5c53f49a1ac4f99de30a73dc610e85803cc51&amp;width=500&amp;height=400&amp;lang=ru_RU&amp;scroll=true"></script>
+                </div>
+            </div>
+        </div>
+
+        <div id="reviewsSection" class="reviews-section">
+            <h2 class="reviews-title">Отзывы посетителей</h2>
+            <div class="reviews-list" id="reviewsList"></div>
+            <div class="review-form">
+                <h3 style="margin-bottom: 12px; font-size: 1rem;">Оставить отзыв</h3>
+                <div id="reviewSuccessMsg" style="display: none;" class="success-msg"></div>
+                <textarea id="reviewText" rows="3" placeholder="Поделитесь впечатлениями о саде..."></textarea>
+                <button id="submitReviewBtn">Отправить на проверку</button>
+                <p style="font-size: 0.7rem; margin-top: 8px; color: #aaa;">Отзыв будет опубликован после проверки модератором.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>© 2026 Калининград | Дипломный проект — гид по городу и области</p>
+            <p><i class="fas fa-heart" style="color: #F97316;"></i> С любовью к самому западному городу России</p>
+        </div>
+    </footer>
+
+    <!-- Плавающая иконка авторизации СЛЕВА -->
+    <div class="float-auth">
+        <div class="auth-icon" id="authIcon"><i class="fas fa-user-circle"></i></div>
+        <div class="auth-popup" id="authPopup"><div id="popupContent"></div></div>
+    </div>
+
+    <!-- Модальные окна -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('loginModal')">&times;</span>
+            <h3>Вход</h3>
+            <input type="email" id="loginEmail" placeholder="Email">
+            <input type="password" id="loginPassword" placeholder="Пароль">
+            <button onclick="login()" class="btn-primary btn-auth">Войти</button>
+            <p style="margin-top: 12px; text-align: center; font-size: 0.8rem;">
+                Нет аккаунта? <a href="#" onclick="openModal('registerModal'); closeModal('loginModal'); return false;">Зарегистрироваться</a>
+            </p>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeModal('registerModal')">&times;</span>
+            <h3>Регистрация</h3>
+            <input type="text" id="regName" placeholder="Имя">
+            <input type="email" id="regEmail" placeholder="Email">
+            <input type="password" id="regPassword" placeholder="Пароль">
+            <button onclick="register()" class="btn-primary btn-auth">Зарегистрироваться</button>
+        </div>
+    </div>
+
+    <script>
+        // Слайдер
+        const track = document.getElementById('sliderTrack');
+        const slides = document.querySelectorAll('.slider-slide');
+        const prevBtn = document.getElementById('sliderPrev');
+        const nextBtn = document.getElementById('sliderNext');
+        const dotsContainer = document.getElementById('sliderDots');
+        let currentIndex = 0, totalSlides = slides.length, autoInterval;
+
+        function createDots() {
+            dotsContainer.innerHTML = '';
+            for (let i = 0; i < totalSlides; i++) {
+                const dot = document.createElement('div');
+                dot.classList.add('slider-dot');
+                if (i === currentIndex) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(i));
+                dotsContainer.appendChild(dot);
+            }
+        }
+        function updateSlider() { track.style.transform = `translateX(-${currentIndex * 100}%)`; document.querySelectorAll('.slider-dot').forEach((d, i) => i === currentIndex ? d.classList.add('active') : d.classList.remove('active')); }
+        function goToSlide(i) { currentIndex = i; updateSlider(); resetAuto(); }
+        function nextSlide() { currentIndex = (currentIndex + 1) % totalSlides; updateSlider(); resetAuto(); }
+        function prevSlide() { currentIndex = (currentIndex - 1 + totalSlides) % totalSlides; updateSlider(); resetAuto(); }
+        function startAuto() { autoInterval = setInterval(nextSlide, 4000); }
+        function resetAuto() { clearInterval(autoInterval); startAuto(); }
+        if(prevBtn && nextBtn) {
+            prevBtn.addEventListener('click', prevSlide);
+            nextBtn.addEventListener('click', nextSlide);
+        }
+        createDots(); startAuto();
+
+        // Данные для Ботанического сада
+        const placeId = 'botsad';
+        let currentUser = null;
+        let likes = parseInt(localStorage.getItem(`likes_${placeId}`) || '3150');
+        let isLiked = localStorage.getItem(`liked_${placeId}_user`) === 'true';
+        let reviews = JSON.parse(localStorage.getItem(`reviews_${placeId}`)) || [
+            { author: 'Екатерина', text: 'Прекрасное место для прогулок! Очень ухоженный сад, много красивых растений. Особенно впечатлила японская коллекция.', date: '20.06.2026', approved: true },
+            { author: 'Сергей', text: 'Тишина, покой, красота. Оранжерея с тропическими растениями — отдельное удовольствие. Рекомендую всем любителям природы.', date: '15.06.2026', approved: true },
+            { author: 'Анна', text: 'Были с детьми, очень понравилось. Много интересных растений, есть где погулять и отдохнуть. Обязательно придём ещё весной на цветение сакуры!', date: '10.06.2026', approved: true }
+        ];
+        function saveReviews() { localStorage.setItem(`reviews_${placeId}`, JSON.stringify(reviews)); }
+        function escapeHtml(s) { return s.replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m])); }
+
+        function renderReviews() {
+            const container = document.getElementById('reviewsList');
+            const approved = reviews.filter(r => r.approved);
+            document.getElementById('reviewsCount').innerText = approved.length;
+            if (!approved.length) { container.innerHTML = '<p style="color:#aaa;">Пока нет отзывов. Будьте первым!</p>'; return; }
+            container.innerHTML = approved.map(r => `<div class="review-item"><div class="review-author">${escapeHtml(r.author)}</div><div class="review-text">${escapeHtml(r.text)}</div><div class="review-date">${r.date}</div></div>`).join('');
+        }
+
+        function updateLikeUI() {
+            const btn = document.getElementById('likeBtn');
+            document.getElementById('likeCount').innerText = likes;
+            if (isLiked) { btn.classList.add('liked'); btn.querySelector('i').className = 'fas fa-heart'; }
+            else { btn.classList.remove('liked'); btn.querySelector('i').className = 'far fa-heart'; }
+            localStorage.setItem(`likes_${placeId}`, likes);
+            localStorage.setItem(`liked_${placeId}_user`, isLiked);
+        }
+
+        document.getElementById('likeBtn').addEventListener('click', () => {
+            if (!currentUser) { alert('Войдите, чтобы ставить лайки!'); return; }
+            isLiked ? (likes--, isLiked=false) : (likes++, isLiked=true);
+            updateLikeUI();
+        });
+        document.getElementById('reviewsBtn').addEventListener('click', () => document.getElementById('reviewsSection').scrollIntoView({ behavior: 'smooth' }));
+        document.getElementById('submitReviewBtn').addEventListener('click', () => {
+            if (!currentUser) { alert('Войдите, чтобы оставить отзыв!'); return; }
+            const text = document.getElementById('reviewText').value.trim();
+            if (!text) { alert('Напишите отзыв'); return; }
+            reviews.push({ author: currentUser.name, text: text, date: new Date().toLocaleDateString('ru-RU'), approved: false });
+            saveReviews();
+            const msg = document.getElementById('reviewSuccessMsg');
+            msg.innerText = 'Спасибо! Отзыв отправлен на проверку.';
+            msg.style.display = 'block';
+            document.getElementById('reviewText').value = '';
+            setTimeout(() => msg.style.display = 'none', 4000);
+            renderReviews();
+        });
+
+        // Авторизация с аватаром
+        const DEFAULT_AVATAR_URL = 'https://randomuser.me/api/portraits/lego/1.jpg';
+        
+        function loadUser() {
+            const saved = localStorage.getItem('currentUser');
+            if (saved) currentUser = JSON.parse(saved);
+            updateAuthPopup();
+        }
+        
+        function updateAuthPopup() {
+            const popup = document.getElementById('popupContent');
+            if (!popup) return;
+            if (currentUser) {
+                const avatarUrl = currentUser.avatar || DEFAULT_AVATAR_URL;
+                popup.innerHTML = `
+                    <div style="text-align:center">
+                        <img class="avatar-circle" src="${avatarUrl}" alt="Аватар" onerror="this.src='${DEFAULT_AVATAR_URL}'">
+                        <p style="margin:8px 0"><strong>${escapeHtml(currentUser.name)}</strong><br><small>${escapeHtml(currentUser.email)}</small></p>
+                        <button class="btn-outline btn-auth" onclick="logout()">Выйти</button>
+                        <button class="btn-primary btn-auth" onclick="openProfile()">Мой профиль</button>
+                    </div>
+                `;
+            } else {
+                popup.innerHTML = `
+                    <div style="text-align:center">
+                        <img class="avatar-circle" src="https://raw.githubusercontent.com/sonich228/sonich228/refs/heads/main/keksik.jpg" alt="Гость" onerror="this.src='${DEFAULT_AVATAR_URL}'">
+                        <p style="margin:8px 0"><strong>Гость</strong></p>
+                        <p>Создайте учётную запись, чтобы добавлять отзывы и сохранять понравившиеся места в избранное.</p>
+                        <button class="btn-primary btn-auth" onclick="openModal('loginModal'); closeAuthPopup()">Вход</button>
+                        <button class="btn-outline btn-auth" onclick="openModal('registerModal'); closeAuthPopup()">Регистрация</button>
+                    </div>
+                `;
+            }
+        }
+        
+        function openAuthPopup() { document.getElementById('authPopup').classList.toggle('active'); }
+        function closeAuthPopup() { document.getElementById('authPopup').classList.remove('active'); }
+
+        function register() {
+            const name = document.getElementById('regName').value.trim();
+            const email = document.getElementById('regEmail').value.trim();
+            const password = document.getElementById('regPassword').value;
+            if (!name || !email || !password) { alert('Заполните все поля'); return; }
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            if (users.find(u => u.email === email)) { alert('Email уже зарегистрирован'); return; }
+            const avatar = prompt('Вставьте ссылку на фото для аватара (необязательно):', DEFAULT_AVATAR_URL);
+            const newUser = { id: Date.now(), name, email, password, favorites: [], avatar: avatar || DEFAULT_AVATAR_URL };
+            users.push(newUser);
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('currentUser', JSON.stringify(newUser));
+            currentUser = newUser;
+            updateAuthPopup();
+            closeModal('registerModal');
+            alert('Регистрация успешна!');
+        }
+        
+        function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            if (!email || !password) { alert('Введите email и пароль'); return; }
+            const users = JSON.parse(localStorage.getItem('users') || '[]');
+            const user = users.find(u => u.email === email && u.password === password);
+            if (!user) { alert('Неверный email или пароль'); return; }
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            currentUser = user;
+            updateAuthPopup();
+            closeModal('loginModal');
+            alert(`Добро пожаловать, ${user.name}!`);
+        }
+        
+        function logout() {
+            localStorage.removeItem('currentUser');
+            currentUser = null;
+            updateAuthPopup();
+            isLiked = false;
+            updateLikeUI();
+            alert('Вы вышли из системы');
+        }
+        
+        function openProfile() {
+            if (!currentUser) return;
+            const favs = JSON.parse(localStorage.getItem(`favorites_${currentUser.id}`) || '[]');
+            const userReviews = reviews.filter(r => r.author === currentUser.name && r.approved);
+            alert(`Профиль: ${currentUser.name}\nEmail: ${currentUser.email}\nИзбранное: ${favs.length}\nОтзывов: ${userReviews.length}`);
+        }
+        
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        // Мобильное меню
+        const burgerBtn = document.getElementById('burgerBtn');
+        const mobileMenuDiv = document.getElementById('mobileMenu');
+        const overlayDiv = document.getElementById('overlay');
+        const closeMenuBtn = document.getElementById('closeMenuBtn');
+        function openMobileMenu() { mobileMenuDiv.classList.add('active'); overlayDiv.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeMobileMenu() { mobileMenuDiv.classList.remove('active'); overlayDiv.classList.remove('active'); document.body.style.overflow = ''; }
+        if(burgerBtn) burgerBtn.addEventListener('click', openMobileMenu);
+        if(closeMenuBtn) closeMenuBtn.addEventListener('click', closeMobileMenu);
+        if(overlayDiv) overlayDiv.addEventListener('click', closeMobileMenu);
+
+        document.getElementById('authIcon').addEventListener('click', openAuthPopup);
+        window.onclick = function(e) {
+            if (e.target.classList && e.target.classList.contains('modal')) e.target.classList.remove('active');
+            if (!e.target.closest('.float-auth')) closeAuthPopup();
+        }
+        loadUser();
+        renderReviews();
+        updateLikeUI();
+        saveReviews();
+    </script>
+</body>
+</html>

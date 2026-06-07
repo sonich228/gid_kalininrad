@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Отели | Гид39</title>
+    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/sonich228/sonich228/refs/heads/main/otel.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FFFFFF;
+            color: #2C2C2C;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --orange-primary: #F97316;
+            --orange-dark: #EA580C;
+            --orange-light: #FFEDD5;
+            --orange-soft: #FFF7ED;
+            --gray-text: #4B5563;
+            --gray-light: #F3F4F6;
+            --white: #FFFFFF;
+            --shadow-sm: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 20px 25px -12px rgba(0, 0, 0, 0.08);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* НАВИГАЦИЯ С БУРГЕРОМ */
+        .navbar {
+            background: var(--white);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(2px);
+            background-color: rgba(255,255,255,0.96);
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 12px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 15px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.3px;
+            color: var(--orange-primary);
+        }
+        .logo i {
+            font-size: 1.8rem;
+            color: var(--orange-primary);
+        }
+        .logo span {
+            background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* КОМПАКТНАЯ ПОГОДА (только для ПК) */
+        .weather-widget {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--orange-light);
+            padding: 4px 16px;
+            border-radius: 48px;
+            border: 1px solid #ffe0c4;
+        }
+        .weather-main {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+        .weather-main i {
+            color: var(--orange-primary);
+            font-size: 1.2rem;
+        }
+        .weather-main .temp {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1e293b;
+        }
+        .weather-extras {
+            display: flex;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: var(--gray-text);
+            border-left: 1px solid #e2c8a8;
+            padding-left: 12px;
+        }
+        .weather-extras i {
+            color: var(--orange-primary);
+            margin-right: 3px;
+            font-size: 0.7rem;
+        }
+
+        /* БУРГЕР */
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 101;
+        }
+        .burger-menu span {
+            width: 100%;
+            height: 3px;
+            background: var(--orange-primary);
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #2d3e50;
+            transition: 0.2s;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+        .nav-links a:hover {
+            color: var(--orange-primary);
+            border-bottom-color: var(--orange-primary);
+        }
+
+        /* Мобильное меню */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+            z-index: 200;
+            padding: 80px 24px 30px;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .mobile-menu.active { right: 0; }
+        .mobile-menu a {
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #2d3e50;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            transition: 0.2s;
+        }
+        .mobile-menu a:hover {
+            color: var(--orange-primary);
+            padding-left: 10px;
+        }
+        .mobile-menu .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--orange-primary);
+        }
+        /* Погода внутри бургера (только для мобильной версии) */
+        .mobile-weather {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--orange-light);
+            padding: 8px 12px;
+            border-radius: 40px;
+            margin-top: 20px;
+            font-size: 0.8rem;
+        }
+        .mobile-weather i { color: var(--orange-primary); }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 150;
+            display: none;
+        }
+        .overlay.active { display: block; }
+
+        @media (max-width: 860px) {
+            .weather-widget { display: none; }
+            .nav-links { display: none; }
+            .burger-menu { display: flex; }
+        }
+
+        /* ПЕРЕЛИВАЮЩИЙСЯ ФОН ДЛЯ ШАПКИ СТРАНИЦЫ */
+        .page-header {
+            position: relative;
+            background: none;
+            overflow: hidden;
+            padding: 2rem 0 2rem 0;
+            border-bottom: none;
+        }
+        .header-slideshow-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .header-slideshow-bg .header-slide-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+        }
+        .header-slideshow-bg .header-slide-bg.active {
+            opacity: 1;
+        }
+        .page-header .container {
+            position: relative;
+            z-index: 2;
+        }
+        .page-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .page-header .breadcrumbs,
+        .page-header .breadcrumbs a,
+        .page-header .page-title,
+        .page-header .page-title span,
+        .page-header .page-description {
+            color: white;
+        }
+        .page-header .breadcrumbs a {
+            color: #ffd9b5;
+        }
+        .page-header .breadcrumbs a:hover {
+            color: white;
+        }
+        .page-title span {
+            color: var(--orange-primary) !important;
+        }
+
+        /* ХЛЕБНЫЕ КРОШКИ И ЗАГОЛОВКИ */
+        .breadcrumbs {
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+        .breadcrumbs a {
+            text-decoration: none;
+        }
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .page-description {
+            font-size: 1.1rem;
+            max-width: 800px;
+            line-height: 1.5;
+        }
+
+        /* СЕТКА КАРТОЧЕК: 4 В РЯД — ВЫРОВНЕННЫЕ КАРТОЧКИ */
+        .places-section {
+            padding: 50px 0 70px;
+            background: white;
+        }
+        .places-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .place-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .place-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--orange-light);
+        }
+        .place-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        .place-info {
+            padding: 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .place-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+        .place-description {
+            font-size: 0.85rem;
+            color: var(--gray-text);
+            line-height: 1.4;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+        }
+        .place-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 12px;
+            margin-top: auto;
+        }
+        .stats-left {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .likes {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--orange-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .likes i {
+            font-size: 1rem;
+        }
+        .reviews {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #6b7280;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .reviews i {
+            font-size: 1rem;
+            color: var(--orange-primary);
+        }
+        .price {
+            background: var(--orange-soft);
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--orange-primary);
+            text-align: center;
+            min-width: 100px;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.3;
+        }
+        .price span:first-child {
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: var(--gray-text);
+        }
+        .price span:last-child {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--orange-primary);
+        }
+
+        /* Плавающая иконка авторизации — СЛЕВА */
+        .float-auth {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            z-index: 1000;
+        }
+        .auth-icon {
+            width: 55px;
+            height: 55px;
+            background: var(--orange-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            color: white;
+            font-size: 1.6rem;
+        }
+        .auth-icon:hover { transform: scale(1.05); background: var(--orange-dark); }
+        .auth-popup {
+            position: absolute;
+            bottom: 70px;
+            left: 0;
+            width: 260px;
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: none;
+        }
+        .auth-popup.active { display: block; }
+        .avatar-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 10px;
+            display: block;
+            border: 3px solid var(--orange-primary);
+        }
+        .auth-popup h4 { font-size: 1rem; margin-bottom: 8px; text-align: center; }
+        .auth-popup p { font-size: 0.75rem; margin-bottom: 12px; text-align: center; }
+        .btn-auth { width: 100%; margin-bottom: 8px; text-align: center; padding: 8px; font-size: 0.8rem; }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--orange-primary);
+            border-radius: 40px;
+            color: var(--orange-primary);
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: var(--orange-primary);
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Модальные окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 25px;
+            max-width: 360px;
+            width: 90%;
+        }
+        .modal-content h3 { margin-bottom: 15px; font-size: 1.3rem; }
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        .close-modal { float: right; font-size: 1.3rem; cursor: pointer; }
+
+        /* ФУТЕР */
+        .footer {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 32px 0;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 1100px) {
+            .places-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .places-grid { grid-template-columns: repeat(2, 1fr); }
+            .page-title { font-size: 1.8rem; }
+            .float-auth { bottom: 15px; left: 15px; }
+            .auth-icon { width: 48px; height: 48px; font-size: 1.4rem; }
+        }
+        @media (max-width: 550px) {
+            .places-grid { grid-template-columns: 1fr; }
+            .place-image { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-map-marked-alt"></i>
+            <span>КалининградГид</span>
+        </div>
+
+        <!-- Погода в основном меню (только для ПК) -->
+        <div class="weather-widget">
+            <div class="weather-main">
+                <i class="fas fa-sun"></i>
+                <span class="temp">+17°C</span>
+            </div>
+            <div class="weather-extras">
+                <span><i class="fas fa-wind"></i> 5 m/s</span>
+                <span><i class="fas fa-tint"></i> 76%</span>
+            </div>
+        </div>
+
+        <div class="burger-menu" id="burgerBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links">
+            <a href="diplombir.html">Главная</a>
+            <a href="places.html">Туристические места</a>
+            <a href="rest.html">Рестораны и кафе</a>
+            <a href="suv.html">Сувениры</a>
+            <a href="otel.html">Отели</a>
+            <a href="raz.html">Развлечения</a>
+        </div>
+    </div>
+</header>
+
+<!-- Мобильное меню с погодой внутри -->
+<div class="mobile-menu" id="mobileMenu">
+    <div class="close-btn" id="closeMenuBtn">&times;</div>
+    <a href="diplombir.html">Главная</a>
+    <a href="places.html">Туристические места</a>
+    <a href="rest.html">Рестораны и кафе</a>
+    <a href="suv.html">Сувениры</a>
+    <a href="otel.html">Отели</a>
+    <a href="raz.html">Развлечения</a>
+    
+    <!-- Погода внутри бургера (внизу) -->
+    <div class="mobile-weather">
+        <i class="fas fa-sun"></i>
+        <span>+17°C</span>
+        <span><i class="fas fa-wind"></i> 5 m/s</span>
+        <span><i class="fas fa-tint"></i> 76%</span>
+    </div>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<main>
+    <!-- ШАПКА С ПЕРЕЛИВАЮЩИМСЯ ФОНОМ -->
+    <div class="page-header">
+        <div class="header-slideshow-bg" id="headerSlideshowBg">
+            <div class="header-slide-bg" style="background-image: url('https://www.svoiludi.ru/images/tb/10776/iberostar-grand-hotel-el-mirador-hotel-13865411065754_w990h700.jpg');"></div>
+            <div class="header-slide-bg" style="background-image: url('https://attaches.1001tur.ru/hotels/gallery/449453/1200-0_33281600916588.jpg');"></div>
+            <div class="header-slide-bg" style="background-image: url('https://media.datahc.com/HI609606815.jpg');"></div>
+            <div class="header-slide-bg" style="background-image: url('https://avatars.mds.yandex.net/i?id=04cf5ecde866f746608622a2c3fff4c9_l-5255188-images-thumbs&n=13');"></div>
+            <div class="header-slide-bg" style="background-image: url('https://avatars.mds.yandex.net/i?id=98c1bdf319a635693e717f3b2cd2dd5377304d87-5234578-images-thumbs&n=13');"></div>
+        </div>
+        
+        <div class="container">
+            <div class="breadcrumbs">
+                <a href="diplombir.html">Главная</a> / <span>Отели</span>
+            </div>
+            <h1 class="page-title"><span>Отели</span></h1>
+            <p class="page-description">
+                Комфортное проживание в самом западном городе России. От уютных апартаментов до роскошных отелей с видом на море.
+            </p>
+        </div>
+    </div>
+
+    <!-- СЕТКА КАРТОЧЕК -->
+    <div class="places-section">
+        <div class="container">
+            <div class="places-grid" id="placesGrid"></div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>© 2026 Калининград | Дипломный проект — гид по городу и области</p>
+        <p style="margin-top: 10px;"><i class="fas fa-heart" style="color: #F97316;"></i> С любовью к самому западному городу России</p>
+    </div>
+</footer>
+
+<!-- Плавающая иконка авторизации СЛЕВА -->
+<div class="float-auth">
+    <div class="auth-icon" id="authIcon"><i class="fas fa-user-circle"></i></div>
+    <div class="auth-popup" id="authPopup"><div id="popupContent"></div></div>
+</div>
+
+<!-- Модальные окна -->
+<div id="loginModal" class="modal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center;">
+    <div class="modal-content" style="background:white; border-radius:28px; padding:25px; max-width:360px; width:90%;">
+        <span class="close-modal" onclick="closeModal('loginModal')" style="float:right; font-size:1.5rem; cursor:pointer;">&times;</span>
+        <h3 style="margin-bottom:15px;">Вход</h3>
+        <input type="email" id="loginEmail" placeholder="Email" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #e2e8f0; border-radius:20px;">
+        <input type="password" id="loginPassword" placeholder="Пароль" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #e2e8f0; border-radius:20px;">
+        <button onclick="login()" class="btn-primary btn-auth" style="width:100%; margin-bottom:8px; padding:8px;">Войти</button>
+        <p style="margin-top:12px; text-align:center; font-size:0.8rem;">
+            Нет аккаунта? <a href="#" onclick="openModal('registerModal'); closeModal('loginModal'); return false;">Зарегистрироваться</a>
+        </p>
+    </div>
+</div>
+
+<div id="registerModal" class="modal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center;">
+    <div class="modal-content" style="background:white; border-radius:28px; padding:25px; max-width:360px; width:90%;">
+        <span class="close-modal" onclick="closeModal('registerModal')" style="float:right; font-size:1.5rem; cursor:pointer;">&times;</span>
+        <h3 style="margin-bottom:15px;">Регистрация</h3>
+        <input type="text" id="regName" placeholder="Имя" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #e2e8f0; border-radius:20px;">
+        <input type="email" id="regEmail" placeholder="Email" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #e2e8f0; border-radius:20px;">
+        <input type="password" id="regPassword" placeholder="Пароль" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #e2e8f0; border-radius:20px;">
+        <button onclick="register()" class="btn-primary btn-auth" style="width:100%; margin-bottom:8px; padding:8px;">Зарегистрироваться</button>
+    </div>
+</div>
+
+<script>
+    // ==================== ДАННЫЕ ДЛЯ ОТЕЛЕЙ ====================
+    // КАЖДАЯ КАРТОЧКА ВЕДЁТ НА ОТЕЛЬНУЮ СТРАНИЦУ otel_1.html ... otel_20.html
+    const hotelsData = {
+        title: 'отели',
+        name: 'Отели',
+        description: 'Комфортное проживание в самом западном городе России. От уютных апартаментов до роскошных отелей с видом на море.',
+        cards: [
+            { id: 1, title: 'Radisson Blu', desc: 'Отель мирового уровня в самом центре города. Вид на Кафедральный собор.', likes: 2847, reviews: 312, price: '8500 ₽', img: 'https://s0.rbk.ru/v6_top_pics/resized/1440xH/media/img/4/65/756691175490654.jpg', pageUrl: 'otel_1.html' },
+            { id: 2, title: 'Holiday Inn', desc: 'Современный отель сети Hilton. Отличный завтрак и удобства для всей семьи.', likes: 2156, reviews: 287, price: '6200 ₽', img: 'https://avatars.mds.yandex.net/i?id=28fd54f92d669b534b3e37bd4f78b968_l-5496315-images-thumbs&n=13', pageUrl: 'otel_2.html' },
+            { id: 3, title: 'Балтика', desc: 'Отель в центре с шикарным завтраком и спа-зоной. Рядом с парком.', likes: 2341, reviews: 178, price: '4500 ₽', img: 'https://avatars.mds.yandex.net/i?id=75153cd6280e5b85600b2610b46319ee_l-4577698-images-thumbs&n=13', pageUrl: 'otel_3.html' },
+            { id: 4, title: 'Kaiserhof', desc: 'Исторический отель у Кафедрального собора. Атмосфера старого Кёнигсберга.', likes: 1987, reviews: 156, price: '6500 ₽', img: 'https://s.101hotelscdn.ru/uploads/image/hotel_image/184/5689189.jpg', pageUrl: 'otel_4.html' },
+            { id: 5, title: 'Шлосс', desc: 'Стильный отель около моря. Панорамный вид на Балтику.', likes: 1432, reviews: 98, price: '5500 ₽', img: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/68/61/ab/caption.jpg?w=1800&h=1000&s=1', pageUrl: 'otel_5.html' },
+            { id: 6, title: 'Бриз Балтики', desc: 'Отель на берегу Балтийского моря. Собственный пляж и ресторан.', likes: 876, reviews: 67, price: '4800 ₽', img: 'https://s.101hotelscdn.ru/uploads/image/hotel_image/416975/115571.jpg', pageUrl: 'otel_6.html' },
+            { id: 7, title: 'Mercure', desc: 'Современный отель с видом на город. Отличная транспортная доступность.', likes: 1654, reviews: 143, price: '5200 ₽', img: 'https://avatars.mds.yandex.net/i?id=5d47c442841024801ae4de51e0b43cee9cb9f26a-5258986-images-thumbs&n=13', pageUrl: 'otel_7.html' },
+            { id: 8, title: 'Амалиенау', desc: 'Уютный мини-отель в историческом районе вилл. Домашняя атмосфера.', likes: 987, reviews: 89, price: '3800 ₽', img: 'https://dynamic-media-cdn.tripadvisor.com/media/photo-o/22/71/e5/e2/caption.jpg?w=800&h=500&s=1', pageUrl: 'otel_8.html' },
+            { id: 9, title: 'Ibis', desc: 'Бюджетная сеть отелей. Чисто, удобно, есть всё необходимое.', likes: 1543, reviews: 198, price: '3200 ₽', img: 'https://avatars.mds.yandex.net/get-altay/16136444/2a0000019a92b4214e4bf09ee1e85999b194/orig', pageUrl: 'otel_9.html' },
+            { id: 10, title: 'Crystal House', desc: 'Бутик-отель в центре. Стильный дизайн, отличные отзывы.', likes: 876, reviews: 67, price: '6000 ₽', img: 'https://avatars.mds.yandex.net/i?id=cb0a7837578bd1d8018794a7a2f1acc3_l-4080866-images-thumbs&n=13', pageUrl: 'otel_10.html' },
+            { id: 11, title: 'Отель "Европа"', desc: 'Мини-отель рядом с драматическим театром. Тихо, уютно.', likes: 654, reviews: 54, price: '3500 ₽', img: 'https://s.101hotelscdn.ru/uploads/image/hotel_image/378163/1123828.jpg', pageUrl: 'otel_11.html' },
+            { id: 12, title: 'Гостиница Мартон Палас', desc: 'Апартаменты в тихом районе. Есть кухня и парковка.', likes: 543, reviews: 43, price: '2500 ₽', img: 'https://resize.onlinetours.ru/G7-5f0-_KXgD0C72JpcRuLC0cshHOw6ULDBmr2wE8Mw/rs:fit:8192:800:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWM1Lm9sdC5zdS9z/eXN0ZW0vdXBsb2Fk/cy9ob3RlbF9waG90/by9pbWFnZS8zMi82/Mi8yMy82Ni9vcmln/aW5hbF81ZWM2NGFk/MTAxZDMzLmpwZz90/aW1lc3RhbXA9MTc3/NjA2NjAxOA.jpg', pageUrl: 'otel_12.html' },
+            { id: 13, title: 'Гостевой дом Ласточка', desc: 'Советская классика. Большие номера, дёшево и сердито.', likes: 1234, reviews: 98, price: '2800 ₽', img: 'https://i2.photo.2gis.com/images/branch/42/5910974513170257_c096.jpg', pageUrl: 'otel_13.html' },
+            { id: 14, title: 'Хостел Калининград', desc: 'Недорогое проживание в центре. Общая кухня, душ, вайфай.', likes: 876, reviews: 143, price: '800 ₽', img: 'https://cdn.worldota.net/t/640x400/extranet/05/24/0524d1fa9d8b9cee5e159b2063f1de492c60d0c9.jpeg', pageUrl: 'otel_14.html' },
+            { id: 15, title: 'Отель Балтия', desc: 'Отель с видом на собор. Романтичная атмосфера.', likes: 765, reviews: 67, price: '4500 ₽', img: 'https://avatars.mds.yandex.net/i?id=f433a38da6cc3834f8ddabdfe5415579_l-9066514-images-thumbs&n=13', pageUrl: 'otel_15.html' },
+            { id: 16, title: 'Гостинеца Калининград', desc: 'Отель с рестораном и конференц-залом. Удобно для бизнес-поездок.', likes: 654, reviews: 56, price: '4000 ₽', img: 'https://womenmag.ru/forpics-plus/52856.jpg', pageUrl: 'otel_16.html' },
+            { id: 17, title: 'Гостиница Золотая Бухта', desc: 'Мини-отель с домашней атмосферой. Семейный подряд.', likes: 432, reviews: 34, price: '2200 ₽', img: 'https://hotels-cdn.onetwotrip.com/hotels/354197/426636071_t.jpg', pageUrl: 'otel_17.html' },
+            { id: 18, title: 'Гостиница Берлин', desc: 'Отель в тихом районе рядом с парком.', likes: 543, reviews: 45, price: '3000 ₽', img: 'https://s.101hotelscdn.ru/uploads/image/hotel_image/5722/168646.jpg', pageUrl: 'otel_18.html' },
+            { id: 19, title: 'Отель Патриот', desc: 'Отель у воды. Вид на реку и закаты.', likes: 765, reviews: 67, price: '4200 ₽', img: 'https://avatars.mds.yandex.net/get-travel-extranet/19252813/2a0000019d20b048c04299434b02d257e992/XL', pageUrl: 'otel_19.html' },
+            { id: 20, title: 'Отель Maziiz Hotel', desc: 'Апартаменты на берегу моря. Классный вид на закат.', likes: 1234, reviews: 98, price: '2200 ₽', img: 'https://s.101hotelscdn.ru/uploads/image/hotel_image/650759/1228008.jpg', pageUrl: 'otel_20.html' }
+        ]
+    };
+
+    // ==================== ЗАПОЛНЕНИЕ СТРАНИЦЫ ====================
+    const placesGrid = document.getElementById('placesGrid');
+    document.title = `${hotelsData.name} | Гид39`;
+
+    function renderCards(cardsArray) {
+        placesGrid.innerHTML = '';
+        cardsArray.forEach(card => {
+            // ВАЖНО: каждая карточка при клике переходит на card.pageUrl (otel_1.html ... otel_20.html)
+            const cardHtml = `
+                <div class="place-card" onclick="window.location.href='${card.pageUrl}'">
+                    <img class="place-image" src="${card.img}" alt="${card.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/600x400?text=${encodeURIComponent(card.title)}'">
+                    <div class="place-info">
+                        <h3 class="place-title">${card.title}</h3>
+                        <p class="place-description">${card.desc}</p>
+                        <div class="place-stats">
+                            <div class="stats-left">
+                                <div class="likes"><i class="fas fa-heart"></i> ${card.likes}</div>
+                                <div class="reviews"><i class="fas fa-comment"></i> ${card.reviews}</div>
+                            </div>
+                            <div class="price">
+                                <span>Отели от</span>
+                                <span>${card.price}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            placesGrid.insertAdjacentHTML('beforeend', cardHtml);
+        });
+    }
+
+    renderCards(hotelsData.cards);
+
+    // ==================== СЛАЙД-ШОУ ДЛЯ ШАПКИ ====================
+    const headerSlides = document.querySelectorAll('.header-slideshow-bg .header-slide-bg');
+    let currentHeaderSlide = 0;
+    
+    function nextHeaderSlideBg() {
+        if (headerSlides.length === 0) return;
+        headerSlides[currentHeaderSlide].classList.remove('active');
+        currentHeaderSlide = (currentHeaderSlide + 1) % headerSlides.length;
+        headerSlides[currentHeaderSlide].classList.add('active');
+    }
+    
+    if (headerSlides.length > 0) {
+        headerSlides[0].classList.add('active');
+        setInterval(nextHeaderSlideBg, 3000);
+    }
+
+    // ==================== МОБИЛЬНОЕ МЕНЮ ====================
+    const burgerBtn = document.getElementById('burgerBtn');
+    const mobileMenuDiv = document.getElementById('mobileMenu');
+    const overlayDiv = document.getElementById('overlay');
+    const closeMenuBtnDiv = document.getElementById('closeMenuBtn');
+
+    function openMobileMenu() {
+        mobileMenuDiv.classList.add('active');
+        overlayDiv.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        mobileMenuDiv.classList.remove('active');
+        overlayDiv.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    if (burgerBtn) burgerBtn.addEventListener('click', openMobileMenu);
+    if (closeMenuBtnDiv) closeMenuBtnDiv.addEventListener('click', closeMobileMenu);
+    if (overlayDiv) overlayDiv.addEventListener('click', closeMobileMenu);
+
+    // ==================== АВТОРИЗАЦИЯ ====================
+    const DEFAULT_AVATAR_URL = 'https://randomuser.me/api/portraits/lego/1.jpg';
+    let currentUser = null;
+
+    function loadUser() {
+        const saved = localStorage.getItem('currentUser');
+        if (saved) currentUser = JSON.parse(saved);
+        updateAuthPopup();
+    }
+
+    function updateAuthPopup() {
+        const popup = document.getElementById('popupContent');
+        if (!popup) return;
+        if (currentUser) {
+            const avatarUrl = currentUser.avatar || DEFAULT_AVATAR_URL;
+            popup.innerHTML = `
+                <div style="text-align:center">
+                    <img class="avatar-circle" src="${avatarUrl}" alt="Аватар" onerror="this.src='${DEFAULT_AVATAR_URL}'">
+                    <p style="margin:8px 0"><strong>${escapeHtml(currentUser.name)}</strong><br><small>${escapeHtml(currentUser.email)}</small></p>
+                    <button class="btn-outline btn-auth" onclick="logout()">Выйти</button>
+                    <button class="btn-primary btn-auth" onclick="openProfile()">Мой профиль</button>
+                </div>
+            `;
+        } else {
+            popup.innerHTML = `
+                <div style="text-align:center">
+                    <img class="avatar-circle" src="${DEFAULT_AVATAR_URL}" alt="Гость" onerror="this.src='${DEFAULT_AVATAR_URL}'">
+                    <p style="margin:8px 0"><strong>Гость</strong></p>
+                    <p>Создайте учётную запись, чтобы добавлять отзывы и сохранять понравившиеся места в избранное.</p>
+                    <button class="btn-primary btn-auth" onclick="openModal('loginModal'); closeAuthPopup()">Вход</button>
+                    <button class="btn-outline btn-auth" onclick="openModal('registerModal'); closeAuthPopup()">Регистрация</button>
+                </div>
+            `;
+        }
+    }
+
+    function openAuthPopup() {
+        const popup = document.getElementById('authPopup');
+        if (popup) popup.classList.toggle('active');
+    }
+    function closeAuthPopup() {
+        const popup = document.getElementById('authPopup');
+        if (popup) popup.classList.remove('active');
+    }
+    function escapeHtml(s) { return String(s).replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m])); }
+
+    function register() {
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
+        if (!name || !email || !password) { alert('Заполните все поля'); return; }
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        if (users.find(u => u.email === email)) { alert('Email уже зарегистрирован'); return; }
+        const avatar = prompt('Вставьте ссылку на фото для аватара (необязательно):', DEFAULT_AVATAR_URL);
+        const newUser = { id: Date.now(), name, email, password, favorites: [], avatar: avatar || DEFAULT_AVATAR_URL };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        localStorage.setItem('currentUser', JSON.stringify(newUser));
+        currentUser = newUser;
+        updateAuthPopup();
+        closeModal('registerModal');
+        alert('Регистрация успешна!');
+    }
+
+    function login() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        if (!email || !password) { alert('Введите email и пароль'); return; }
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const user = users.find(u => u.email === email && u.password === password);
+        if (!user) { alert('Неверный email или пароль'); return; }
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        currentUser = user;
+        updateAuthPopup();
+        closeModal('loginModal');
+        alert(`Добро пожаловать, ${user.name}!`);
+    }
+
+    function logout() {
+        localStorage.removeItem('currentUser');
+        currentUser = null;
+        updateAuthPopup();
+        alert('Вы вышли из системы');
+    }
+
+    function openProfile() {
+        if (!currentUser) return;
+        const favs = JSON.parse(localStorage.getItem(`favorites_${currentUser.id}`) || '[]');
+        alert(`Профиль: ${currentUser.name}\nEmail: ${currentUser.email}\nИзбранное: ${favs.length}`);
+    }
+
+    function openModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) modal.style.display = 'flex';
+    }
+    function closeModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) modal.style.display = 'none';
+    }
+
+    document.getElementById('authIcon')?.addEventListener('click', openAuthPopup);
+    window.onclick = function(e) {
+        if (e.target.classList && e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
+        if (!e.target.closest('.float-auth')) closeAuthPopup();
+    }
+
+    loadUser();
+</script>
+</body>
+</html>

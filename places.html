@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Туристические места | Гид39</title>
+    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/sonich228/sonich228/refs/heads/main/dost2.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #FFFFFF;
+            color: #2C2C2C;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --orange-primary: #F97316;
+            --orange-dark: #EA580C;
+            --orange-light: #FFEDD5;
+            --orange-soft: #FFF7ED;
+            --gray-text: #4B5563;
+            --gray-light: #F3F4F6;
+            --white: #FFFFFF;
+            --shadow-sm: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 20px 25px -12px rgba(0, 0, 0, 0.08);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* НАВИГАЦИЯ С БУРГЕРОМ */
+        .navbar {
+            background: var(--white);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.03), 0 1px 2px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(2px);
+            background-color: rgba(255,255,255,0.96);
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 12px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+            gap: 15px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: -0.3px;
+            color: var(--orange-primary);
+        }
+        .logo i {
+            font-size: 1.8rem;
+            color: var(--orange-primary);
+        }
+        .logo span {
+            background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        /* КОМПАКТНАЯ ПОГОДА (только для ПК) */
+        .weather-widget {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--orange-light);
+            padding: 4px 16px;
+            border-radius: 48px;
+            border: 1px solid #ffe0c4;
+        }
+        .weather-main {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+        }
+        .weather-main i {
+            color: var(--orange-primary);
+            font-size: 1.2rem;
+        }
+        .weather-main .temp {
+            font-weight: 700;
+            font-size: 1.2rem;
+            color: #1e293b;
+        }
+        .weather-extras {
+            display: flex;
+            gap: 12px;
+            font-size: 0.75rem;
+            color: var(--gray-text);
+            border-left: 1px solid #e2c8a8;
+            padding-left: 12px;
+        }
+        .weather-extras i {
+            color: var(--orange-primary);
+            margin-right: 3px;
+            font-size: 0.7rem;
+        }
+
+        /* БУРГЕР */
+        .burger-menu {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 30px;
+            height: 21px;
+            cursor: pointer;
+            z-index: 101;
+        }
+        .burger-menu span {
+            width: 100%;
+            height: 3px;
+            background: var(--orange-primary);
+            border-radius: 3px;
+            transition: 0.3s;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: #2d3e50;
+            transition: 0.2s;
+            font-size: 0.95rem;
+            padding: 6px 0;
+            border-bottom: 2px solid transparent;
+            white-space: nowrap;
+        }
+        .nav-links a:hover {
+            color: var(--orange-primary);
+            border-bottom-color: var(--orange-primary);
+        }
+
+        /* Мобильное меню */
+        .mobile-menu {
+            position: fixed;
+            top: 0;
+            right: -280px;
+            width: 280px;
+            height: 100vh;
+            background: white;
+            box-shadow: -5px 0 20px rgba(0,0,0,0.1);
+            z-index: 200;
+            padding: 80px 24px 30px;
+            transition: right 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .mobile-menu.active { right: 0; }
+        .mobile-menu a {
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #2d3e50;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+            transition: 0.2s;
+        }
+        .mobile-menu a:hover {
+            color: var(--orange-primary);
+            padding-left: 10px;
+        }
+        .mobile-menu .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--orange-primary);
+        }
+        /* Погода внутри бургера (только для мобильной версии) */
+        .mobile-weather {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: var(--orange-light);
+            padding: 8px 12px;
+            border-radius: 40px;
+            margin-top: 20px;
+            font-size: 0.8rem;
+        }
+        .mobile-weather i { color: var(--orange-primary); }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 150;
+            display: none;
+        }
+        .overlay.active { display: block; }
+
+        @media (max-width: 860px) {
+            .weather-widget { display: none; }
+            .nav-links { display: none; }
+            .burger-menu { display: flex; }
+        }
+
+        /* ПЕРЕЛИВАЮЩИЙСЯ ФОН ДЛЯ ШАПКИ СТРАНИЦЫ */
+        .page-header {
+            position: relative;
+            background: none;
+            overflow: hidden;
+            padding: 2rem 0 2rem 0;
+            border-bottom: none;
+        }
+        .header-slideshow-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+        .header-slideshow-bg .header-slide-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 1.2s ease-in-out;
+        }
+        .header-slideshow-bg .header-slide-bg.active {
+            opacity: 1;
+        }
+        .page-header .container {
+            position: relative;
+            z-index: 2;
+        }
+        .page-header::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .page-header .breadcrumbs,
+        .page-header .breadcrumbs a,
+        .page-header .page-title,
+        .page-header .page-title span,
+        .page-header .page-description {
+            color: white;
+        }
+        .page-header .breadcrumbs a {
+            color: #ffd9b5;
+        }
+        .page-header .breadcrumbs a:hover {
+            color: white;
+        }
+        .page-title span {
+            color: var(--orange-primary) !important;
+        }
+
+        /* ХЛЕБНЫЕ КРОШКИ И ЗАГОЛОВКИ */
+        .breadcrumbs {
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+        .breadcrumbs a {
+            text-decoration: none;
+        }
+        .page-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        .page-description {
+            font-size: 1.1rem;
+            max-width: 800px;
+            line-height: 1.5;
+        }
+
+        /* СЕТКА КАРТОЧЕК: 4 В РЯД — ВЫРОВНЕННЫЕ КАРТОЧКИ */
+        .places-section {
+            padding: 50px 0 70px;
+            background: white;
+        }
+        .places-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            margin-top: 20px;
+        }
+        
+        /* Стиль для ссылки-карточки */
+        .place-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            height: 100%;
+        }
+        
+        .place-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            cursor: pointer;
+        }
+        .place-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-md);
+            border-color: var(--orange-light);
+        }
+        .place-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+        }
+        .place-info {
+            padding: 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        .place-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
+        .place-description {
+            font-size: 0.85rem;
+            color: var(--gray-text);
+            line-height: 1.4;
+            margin-bottom: 15px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            flex: 1;
+        }
+        .place-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 12px;
+            margin-top: auto;
+        }
+        .stats-left {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        .likes {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--orange-primary);
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .likes i {
+            font-size: 1rem;
+        }
+        .reviews {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #6b7280;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .reviews i {
+            font-size: 1rem;
+            color: var(--orange-primary);
+        }
+        .price {
+            background: var(--orange-soft);
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--orange-primary);
+            white-space: nowrap;
+        }
+
+        /* Плавающая иконка авторизации — СЛЕВА */
+        .float-auth {
+            position: fixed;
+            bottom: 25px;
+            left: 25px;
+            z-index: 1000;
+        }
+        .auth-icon {
+            width: 55px;
+            height: 55px;
+            background: var(--orange-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            color: white;
+            font-size: 1.6rem;
+        }
+        .auth-icon:hover { transform: scale(1.05); background: var(--orange-dark); }
+        .auth-popup {
+            position: absolute;
+            bottom: 70px;
+            left: 0;
+            width: 260px;
+            background: white;
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            display: none;
+        }
+        .auth-popup.active { display: block; }
+        .avatar-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 10px;
+            display: block;
+            border: 3px solid var(--orange-primary);
+        }
+        .auth-popup h4 { font-size: 1rem; margin-bottom: 8px; text-align: center; }
+        .auth-popup p { font-size: 0.75rem; margin-bottom: 12px; text-align: center; }
+        .btn-auth { width: 100%; margin-bottom: 8px; text-align: center; padding: 8px; font-size: 0.8rem; }
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid var(--orange-primary);
+            border-radius: 40px;
+            color: var(--orange-primary);
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background: var(--orange-primary);
+            border: none;
+            border-radius: 40px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 200;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: white;
+            border-radius: 28px;
+            padding: 25px;
+            max-width: 360px;
+            width: 90%;
+        }
+        .modal-content h3 { margin-bottom: 15px; font-size: 1.3rem; }
+        .modal-content input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        .close-modal { float: right; font-size: 1.3rem; cursor: pointer; }
+
+        /* ФУТЕР */
+        .footer {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 32px 0;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 1100px) {
+            .places-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .places-grid { grid-template-columns: repeat(2, 1fr); }
+            .page-title { font-size: 1.8rem; }
+            .float-auth { bottom: 15px; left: 15px; }
+            .auth-icon { width: 48px; height: 48px; font-size: 1.4rem; }
+        }
+        @media (max-width: 550px) {
+            .places-grid { grid-template-columns: 1fr; }
+            .place-image { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <i class="fas fa-map-marked-alt"></i>
+            <span>КалининградГид</span>
+        </div>
+
+        <!-- Погода в основном меню (только для ПК) -->
+        <div class="weather-widget">
+            <div class="weather-main">
+                <i class="fas fa-sun"></i>
+                <span class="temp">+17°C</span>
+            </div>
+            <div class="weather-extras">
+                <span><i class="fas fa-wind"></i> 5 m/s</span>
+                <span><i class="fas fa-tint"></i> 76%</span>
+            </div>
+        </div>
+
+        <div class="burger-menu" id="burgerBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links">
+            <a href="diplombir.html">Главная</a>
+            <a href="places.html">Туристические места</a>
+            <a href="rest.html">Рестораны и кафе</a>
+            <a href="suv.html">Сувениры</a>
+            <a href="otel.html">Отели</a>
+            <a href="raz.html">Развлечения</a>
+        </div>
+    </div>
+</header>
+
+<!-- Мобильное меню с погодой внутри -->
+<div class="mobile-menu" id="mobileMenu">
+    <div class="close-btn" id="closeMenuBtn">&times;</div>
+    <a href="diplombir.html">Главная</a>
+    <a href="places.html">Туристические места</a>
+    <a href="rest.html">Рестораны и кафе</a>
+    <a href="suv.html">Сувениры</a>
+    <a href="otel.html">Отели</a>
+    <a href="raz.html">Развлечения</a>
+    
+    <!-- Погода внутри бургера (внизу) -->
+    <div class="mobile-weather">
+        <i class="fas fa-sun"></i>
+        <span>+17°C</span>
+        <span><i class="fas fa-wind"></i> 5 m/s</span>
+        <span><i class="fas fa-tint"></i> 76%</span>
+    </div>
+</div>
+<div class="overlay" id="overlay"></div>
+
+<main>
+    <!-- ШАПКА С ПЕРЕЛИВАЮЩИМСЯ ФОНОМ -->
+    <div class="page-header">
+        <div class="header-slideshow-bg" id="headerSlideshowBg">
+            <div class="header-slide-bg" style="background-image: url('https://i.pinimg.com/originals/2b/13/7b/2b137bb9486aeae2537d88f1cb157320.jpg');"></div>
+            <div class="header-slide-bg" style="background-image: url('https://avatars.mds.yandex.net/i?id=f6c41854843b488ee06de3aea4ead9e8_l-5329285-images-thumbs&n=13');"></div>
+            <div class="header-slide-bg" style="background-image: url('https://i.pinimg.com/736x/06/a7/77/06a7771e25b7af46786f15f52a22f853.jpg');"></div>
+            <div class="header-slide-bg" style="background-image: url('https://cf.youtravel.me/tr:w-1500/upload/tours/25234/media/559/5592a7f34e1a817e9f61d64dc33d3bd3.jpg');"></div>
+        </div>
+        
+        <div class="container">
+            <div class="breadcrumbs">
+                <a href="diplombir.html">Главная</a> / <span id="currentPageName">Туристические места</span>
+            </div>
+            <h1 class="page-title">Лучшие <span id="pageTitleSpan"></span> Калининграда</h1>
+            <p class="page-description" id="pageDescription">
+                Откройте для себя уникальные достопримечательности самого западного города России. 
+                Древние замки, современные музейные комплексы и живописные парки — всё, что нельзя пропустить.
+            </p>
+        </div>
+    </div>
+
+    <!-- СЕТКА КАРТОЧЕК -->
+    <div class="places-section">
+        <div class="container">
+            <div class="places-grid" id="placesGrid"></div>
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <p>© 2026 Калининград | Дипломный проект — гид по городу и области</p>
+        <p style="margin-top: 10px;"><i class="fas fa-heart" style="color: #F97316;"></i> С любовью к самому западному городу России</p>
+    </div>
+</footer>
+
+<!-- Плавающая иконка авторизации СЛЕВА -->
+<div class="float-auth">
+    <div class="auth-icon" id="authIcon"><i class="fas fa-user-circle"></i></div>
+    <div class="auth-popup" id="authPopup"><div id="popupContent"></div></div>
+</div>
+
+<!-- Модальные окна -->
+<div id="loginModal" class="modal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center;">
+    <div class="modal-content" style="background:white; border-radius:28px; padding:25px; max-width:360px; width:90%;">
+        <span class="close-modal" onclick="closeModal('loginModal')" style="float:right; font-size:1.5rem; cursor:pointer;">&times;</span>
+        <h3 style="margin-bottom:15px;">Вход</h3>
+        <input type="email" id="loginEmail" placeholder="Email" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #e2e8f0; border-radius:20px;">
+        <input type="password" id="loginPassword" placeholder="Пароль" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #e2e8f0; border-radius:20px;">
+        <button onclick="login()" class="btn-primary btn-auth" style="width:100%; margin-bottom:8px; padding:8px;">Войти</button>
+        <p style="margin-top:12px; text-align:center; font-size:0.8rem;">
+            Нет аккаунта? <a href="#" onclick="openModal('registerModal'); closeModal('loginModal'); return false;">Зарегистрироваться</a>
+        </p>
+    </div>
+</div>
+
+<div id="registerModal" class="modal" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:200; justify-content:center; align-items:center;">
+    <div class="modal-content" style="background:white; border-radius:28px; padding:25px; max-width:360px; width:90%;">
+        <span class="close-modal" onclick="closeModal('registerModal')" style="float:right; font-size:1.5rem; cursor:pointer;">&times;</span>
+        <h3 style="margin-bottom:15px;">Регистрация</h3>
+        <input type="text" id="regName" placeholder="Имя" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #e2e8f0; border-radius:20px;">
+        <input type="email" id="regEmail" placeholder="Email" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #e2e8f0; border-radius:20px;">
+        <input type="password" id="regPassword" placeholder="Пароль" style="width:100%; padding:10px; margin-bottom:10px; border:1px solid #e2e8f0; border-radius:20px;">
+        <button onclick="register()" class="btn-primary btn-auth" style="width:100%; margin-bottom:8px; padding:8px;">Зарегистрироваться</button>
+    </div>
+</div>
+
+<script>
+    // ==================== ОПРЕДЕЛЕНИЕ СТРАНИЦЫ ====================
+    const pageKey = (() => {
+        const path = window.location.pathname;
+        if (path.includes('rest')) return 'restaurants';
+        if (path.includes('suv')) return 'souvenirs';
+        if (path.includes('otel')) return 'hotels';
+        if (path.includes('raz')) return 'entertainment';
+        return 'places';
+    })();
+
+    // ==================== ДАННЫЕ ДЛЯ ТУРИСТИЧЕСКИХ МЕСТ С ССЫЛКАМИ ====================
+    const pageContent = {
+        places: {
+            title: 'туристические места',
+            name: 'Туристические места',
+            description: 'Откройте для себя уникальные достопримечательности самого западного города России. Древние замки, современные музейные комплексы и живописные парки — всё, что нельзя пропустить.',
+            cards: [
+                { title: 'Кафедральный собор', desc: 'Знаменитый собор на острове Канта, место захоронения Иммануила Канта. Органные концерты.', likes: 2345, reviews: 156, price: 'от 350 ₽', img: 'https://avatars.mds.yandex.net/i?id=1b69aec2a0bf8f8a8b9d0d8e300fd9e2_l-5194713-images-thumbs&ref=rim&n=13&w=1200&h=799', link: 'tyr_1.html' },
+                { title: 'Рыбная деревня', desc: 'Живописный квартал в стиле старого Кёнигсберга на берегу Преголи. Маяк, рестораны.', likes: 1892, reviews: 98, price: 'Бесплатно', img: 'https://avatars.mds.yandex.net/i?id=6aeb04e2cac57aa749a36732914d717c_l-4079942-images-thumbs&n=13', link: 'tyr_2.html' },
+                { title: 'Музей Мирового океана', desc: 'Уникальный музей с настоящими кораблями, подводной лодкой и экспозициями о морской фауне.', likes: 2100, reviews: 203, price: 'от 500 ₽', img: 'https://avatars.mds.yandex.net/i?id=f2c665184e9a0bbf762bb84d9030fcb6_l-4777142-images-thumbs&n=13', link: 'tyr_3.html' },
+                { title: 'Форт №5', desc: 'Исторический форт времен Первой мировой войны с подземельями и музейными экспозициями.', likes: 1456, reviews: 87, price: 'от 250 ₽', img: 'https://avatars.mds.yandex.net/i?id=6ac2ad4870fd10627e428a301d7490ed_l-8258224-images-thumbs&n=13', link: 'tyr_4.html' },
+                { title: 'Куршская коса', desc: 'Национальный парк с дюнами, Танцующим лесом и озером Лебедь. Маршрут одного дня.', likes: 3200, reviews: 421, price: 'от 300 ₽', img: 'https://avatars.mds.yandex.net/get-marketcms/1532570/img-05f865e0-8514-4223-ac4f-1548a612be84.jpeg/optimize', link: 'tyr_5.html' },
+                { title: 'Музей янтаря', desc: 'Крупнейшая коллекция солнечного камня в мире. Экспонаты от древности до современности.', likes: 1789, reviews: 112, price: 'от 300 ₽', img: 'https://avatars.mds.yandex.net/i?id=37f7a8ab5a029954981960ad6085c510_l-10090660-images-thumbs&n=13', link: 'tyr_6.html' },
+                { title: 'Королевские ворота', desc: 'Памятник архитектуры, посвящённый истории Пруссии. Выставки и макеты замков.', likes: 1234, reviews: 67, price: 'от 200 ₽', img: 'https://avatars.mds.yandex.net/i?id=7e075ef56dd9d1717f237a8783eab240_l-4469558-images-thumbs&n=13', link: 'tyr_7.html' },
+                { title: 'Музей Бункер', desc: 'Музей капитуляции Кёнигсберга в 1945 году. Подземный бункер немецкого генерала.', likes: 987, reviews: 45, price: 'от 250 ₽', img: 'https://avatars.mds.yandex.net/i?id=cda650246c365e4fedab7f63135a1bac_l-12638015-images-thumbs&n=13', link: 'tyr_8.html' },
+                { title: 'Остров Канта', desc: 'Исторический остров с Кафедральным собором и могилой философа. Тихие аллеи.', likes: 2876, reviews: 234, price: 'Бесплатно', img: 'https://avatars.mds.yandex.net/i?id=fd09be561d96a25a717814cf6f7cacbe_l-12157461-images-thumbs&n=13', link: 'tyr_9.html' },
+                { title: 'Фридландские ворота', desc: 'Музей средневекового Кёнигсберга. Макеты, артефакты, подземные ходы.', likes: 876, reviews: 54, price: 'от 200 ₽', img: 'https://avatars.mds.yandex.net/i?id=516bd3000dffaa8f7a4361c6b3f21efb_l-5233858-images-thumbs&n=13', link: 'tyr_10.html' },
+                { title: 'Башня Врангеля', desc: 'Оборонительная башня XIX века с историческими экспонатами и смотровой площадкой.', likes: 654, reviews: 43, price: 'от 150 ₽', img: 'https://avatars.mds.yandex.net/i?id=ece5915c12e6b60f7f44e4f39f4d67b4_l-10151485-images-thumbs&n=13', link: 'tyr_11.html' },
+                { title: 'Кирха Святого Семейства', desc: 'Неоготическая кирха, где сейчас находится филармония. Отличная акустика.', likes: 1098, reviews: 78, price: 'от 400 ₽', img: 'https://i.pinimg.com/736x/73/d4/04/73d404532877cc1d3ffbf2f20c7b36be.jpg', link: 'tyr_12.html' },
+                { title: 'Бранденбургские ворота', desc: 'Единственные из семи сохранившихся городских ворот, действующие до сих пор.', likes: 765, reviews: 56, price: 'Бесплатно', img: 'https://avatars.mds.yandex.net/i?id=d16ae34865848000b9c9d7b0b4b9a3fa_l-4230319-images-thumbs&n=13', link: 'tyr_13.html' },
+                { title: 'Скульптура «Борющиеся бизоны»', desc: 'Знаменитая статуя в парке «Центральный». Любимое место для фото.', likes: 1543, reviews: 98, price: 'Бесплатно', img: 'https://avatars.mds.yandex.net/i?id=3bd8387fefd326550fca34083b95ac3b_l-12985844-images-thumbs&n=13', link: 'tyr_14.html' },
+                { title: 'Росгартенские ворота', desc: 'Ворота в неоготическом стиле с выставками и сувенирной лавкой.', likes: 543, reviews: 34, price: 'от 150 ₽', img: 'https://avatars.mds.yandex.net/i?id=ba42c62fa3aac05b6890267543ee5a68_l-12322312-images-thumbs&n=13', link: 'tyr_15.html' },
+                { title: 'Парк скульптур', desc: 'Парк на острове Канта с работами современных художников и павлинами.', likes: 1234, reviews: 87, price: 'Бесплатно', img: 'https://avatars.mds.yandex.net/i?id=e4f4f01f0ac6b6c335eac4186b4005ac_l-5520101-images-thumbs&n=13', link: 'tyr_16.html' },
+                { title: 'Дом Советов', desc: 'Легендарное недостроенное здание в центре города. Арт-пространство и граффити.', likes: 2341, reviews: 156, price: 'Бесплатно', img: 'https://avatars.mds.yandex.net/i?id=07b5c37931838dd807d7cf046f7f8cd2_l-5089285-images-thumbs&n=13', link: 'tyr_17.html' },
+                { title: 'Площадь Победы', desc: 'Главная площадь Калининграда с собором Христа Спасителя и фонтанами.', likes: 1987, reviews: 143, price: 'Бесплатно', img: 'https://avatars.mds.yandex.net/i?id=f4880b93b41f7047f7ec39bc163c1b8c_l-12422300-images-thumbs&n=13', link: 'tyr_18.html' },
+                { title: 'Закхаймские ворота', desc: 'Музей русской культуры и истории. Экспозиции о купечестве.', likes: 432, reviews: 32, price: 'от 180 ₽', img: 'https://avatars.mds.yandex.net/i?id=8081cd2a545f926cebc6c6d43c2cf7d3_l-10339875-images-thumbs&n=13', link: 'tyr_19.html' },
+                { title: 'Озеро Лебедь Зеленоградск', desc: 'Живописное озеро в Зеленоградске с лебедями и прогулочной зоной.', likes: 876, reviews: 67, price: 'Бесплатно', img: 'https://avatars.mds.yandex.net/i?id=6118e58d67c51c0e3e176b590a64fbb6_l-5232386-images-thumbs&n=13', link: 'tyr_20.html' }
+            ]
+        },
+        restaurants: {
+            title: 'рестораны и кафе',
+            name: 'Рестораны и кафе',
+            description: 'Гастрономическая карта Калининграда: от традиционных кёнигсбергских клопсов до авторской кухни с балтийским акцентом.',
+            cards: [
+                { title: 'Амстердам', desc: 'Европейская кухня с видом на Рыбную деревню. Стейки, паста, авторские десерты.', likes: 3421, reviews: 234, price: '2500 ₽', img: 'https://avatars.mds.yandex.net/i?id=2236490eee6a709134d772b30578580be68f7e8d-5185705-images-thumbs&n=13', link: 'rest_1.html' },
+                { title: 'Шестнадцать тонн', desc: 'Знаменитый паб с отличным выбором крафтового пива и барной едой.', likes: 2100, reviews: 187, price: '1800 ₽', img: 'https://s11.stc.yc.kpcdn.net/share/i/12/10705364/wr-960.webp', link: 'rest_2.html' },
+                { title: 'Фридрихсбург', desc: 'Ресторан у ворот крепости с историческим интерьером. Блюда прусской кухни.', likes: 1876, reviews: 143, price: '2200 ₽', img: 'https://gallery.tverreg.ru/upload/iblock/fa5/4ktqza1f5yj25oh8hgl1znoa5vkimep0.jpg', link: 'rest_3.html' }
+            ]
+        },
+        souvenirs: {
+            title: 'сувениры',
+            name: 'Сувениры',
+            description: 'Что привезти из Калининграда? Янтарные украшения, марципаны ручной работы, керамика и многое другое.',
+            cards: [
+                { title: 'Янтарная мануфактура', desc: 'Изделия из янтаря разных ценовых категорий. Украшения, сувениры, картины.', likes: 876, reviews: 54, price: '500 ₽', img: 'https://7d9e88a8-f178-4098-bea5-48d960920605.selcdn.net/06e52592-56a7-4497-a2ee-aa10c3eb0ce5/', link: 'suv_1.html' },
+                { title: 'Кёнигсбергский марципан', desc: 'Старинная рецептура и авторские сладости. Подарочные наборы и весовые конфеты.', likes: 654, reviews: 42, price: '150 ₽', img: 'https://kurortnic.ru/wp-content/uploads/kaliningrad1-kurortnic.jpg', link: 'suv_2.html' }
+            ]
+        },
+        hotels: {
+            title: 'отели',
+            name: 'Отели',
+            description: 'Лучшие места для проживания в Калининграде: от уютных гостевых домов до роскошных отелей у моря.',
+            cards: [
+                { title: 'Московский проспект', desc: 'Отель в центре с шикарным завтраком и спа-зоной. Рядом с парком.', likes: 2341, reviews: 178, price: '4500 ₽', img: 'https://attaches.1001tur.ru/editor/1024-0_lgmf179eddd7-image__1745401062779.jpg', link: 'otel_1.html' }
+            ]
+        },
+        entertainment: {
+            title: 'развлечения',
+            name: 'Развлечения',
+            description: 'Активный отдых и ночная жизнь: квесты, аттракционы, концерты и театры.',
+            cards: [
+                { title: 'Квест-комната "Тайны замка"', desc: 'Интерактивный квест в историческом стиле. Подходит для компаний 2-6 человек.', likes: 543, reviews: 34, price: '2000 ₽', img: 'https://images.unsplash.com/photo-1565452609378-7fc1adbfb45b?w=600&auto=format', link: 'raz_1.html' }
+            ]
+        }
+    };
+
+    // ==================== ЗАПОЛНЕНИЕ СТРАНИЦЫ ====================
+    const data = pageContent[pageKey];
+    const placesGrid = document.getElementById('placesGrid');
+    
+    if (data) {
+        document.getElementById('currentPageName').innerText = data.name;
+        document.getElementById('pageTitleSpan').innerText = data.title;
+        document.getElementById('pageDescription').innerText = data.description;
+        document.title = `${data.name} | Гид39`;
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function renderCards(cardsArray) {
+        placesGrid.innerHTML = '';
+        cardsArray.forEach(card => {
+            const priceDisplay = card.price;
+            const cardHtml = `
+                <a href="${card.link}" class="place-card-link">
+                    <div class="place-card">
+                        <img class="place-image" src="${card.img}" alt="${card.title}" loading="lazy" onerror="this.src='https://via.placeholder.com/600x400?text=${encodeURIComponent(card.title)}'">
+                        <div class="place-info">
+                            <h3 class="place-title">${escapeHtml(card.title)}</h3>
+                            <p class="place-description">${escapeHtml(card.desc)}</p>
+                            <div class="place-stats">
+                                <div class="stats-left">
+                                    <div class="likes"><i class="fas fa-heart"></i> ${card.likes}</div>
+                                    <div class="reviews"><i class="fas fa-comment"></i> ${card.reviews || 0}</div>
+                                </div>
+                                <div class="price">${priceDisplay}</div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            `;
+            placesGrid.insertAdjacentHTML('beforeend', cardHtml);
+        });
+    }
+
+    // Отображаем карточки (если данных недостаточно до 20, дублируем с уникальными ссылками)
+    let displayCards = [];
+    if (data && data.cards) {
+        const originalCards = data.cards;
+        for (let i = 0; i < 20; i++) {
+            const originalCard = originalCards[i % originalCards.length];
+            // Создаём копию карточки с уникальной ссылкой на основе индекса
+            const newCard = { ...originalCard };
+            if (originalCard.link) {
+                // Для дублирующихся карточек меняем ссылку на соответствующую
+                const baseLink = originalCard.link.split('_')[0];
+                newCard.link = `${baseLink}_${i + 1}.html`;
+            }
+            displayCards.push(newCard);
+        }
+        renderCards(displayCards);
+    }
+
+    // ==================== СЛАЙД-ШОУ ДЛЯ ШАПКИ ====================
+    const headerSlides = document.querySelectorAll('.header-slideshow-bg .header-slide-bg');
+    let currentHeaderSlide = 0;
+    
+    function nextHeaderSlideBg() {
+        if (headerSlides.length === 0) return;
+        headerSlides[currentHeaderSlide].classList.remove('active');
+        currentHeaderSlide = (currentHeaderSlide + 1) % headerSlides.length;
+        headerSlides[currentHeaderSlide].classList.add('active');
+    }
+    
+    if (headerSlides.length > 0) {
+        headerSlides[0].classList.add('active');
+        setInterval(nextHeaderSlideBg, 3000);
+    }
+
+    // ==================== МОБИЛЬНОЕ МЕНЮ ====================
+    const burgerBtn = document.getElementById('burgerBtn');
+    const mobileMenuDiv = document.getElementById('mobileMenu');
+    const overlayDiv = document.getElementById('overlay');
+    const closeMenuBtnDiv = document.getElementById('closeMenuBtn');
+
+    function openMobileMenu() {
+        mobileMenuDiv.classList.add('active');
+        overlayDiv.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+        mobileMenuDiv.classList.remove('active');
+        overlayDiv.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    if (burgerBtn) burgerBtn.addEventListener('click', openMobileMenu);
+    if (closeMenuBtnDiv) closeMenuBtnDiv.addEventListener('click', closeMobileMenu);
+    if (overlayDiv) overlayDiv.addEventListener('click', closeMobileMenu);
+
+    // ==================== АВТОРИЗАЦИЯ ====================
+    const DEFAULT_AVATAR_URL = 'https://randomuser.me/api/portraits/lego/1.jpg';
+    let currentUser = null;
+
+    function loadUser() {
+        const saved = localStorage.getItem('currentUser');
+        if (saved) currentUser = JSON.parse(saved);
+        updateAuthPopup();
+    }
+
+    function updateAuthPopup() {
+        const popup = document.getElementById('popupContent');
+        if (!popup) return;
+        if (currentUser) {
+            const avatarUrl = currentUser.avatar || DEFAULT_AVATAR_URL;
+            popup.innerHTML = `
+                <div style="text-align:center">
+                    <img class="avatar-circle" src="${avatarUrl}" alt="Аватар" onerror="this.src='${DEFAULT_AVATAR_URL}'">
+                    <p style="margin:8px 0"><strong>${escapeHtml(currentUser.name)}</strong><br><small>${escapeHtml(currentUser.email)}</small></p>
+                    <button class="btn-outline btn-auth" onclick="logout()">Выйти</button>
+                    <button class="btn-primary btn-auth" onclick="openProfile()">Мой профиль</button>
+                </div>
+            `;
+        } else {
+            popup.innerHTML = `
+                <div style="text-align:center">
+                    <img class="avatar-circle" src="${DEFAULT_AVATAR_URL}" alt="Гость" onerror="this.src='${DEFAULT_AVATAR_URL}'">
+                    <p style="margin:8px 0"><strong>Гость</strong></p>
+                    <p>Создайте учётную запись, чтобы добавлять отзывы и сохранять понравившиеся места в избранное.</p>
+                    <button class="btn-primary btn-auth" onclick="openModal('loginModal'); closeAuthPopup()">Вход</button>
+                    <button class="btn-outline btn-auth" onclick="openModal('registerModal'); closeAuthPopup()">Регистрация</button>
+                </div>
+            `;
+        }
+    }
+
+    function openAuthPopup() {
+        const popup = document.getElementById('authPopup');
+        if (popup) popup.classList.toggle('active');
+    }
+    function closeAuthPopup() {
+        const popup = document.getElementById('authPopup');
+        if (popup) popup.classList.remove('active');
+    }
+
+    function register() {
+        const name = document.getElementById('regName').value.trim();
+        const email = document.getElementById('regEmail').value.trim();
+        const password = document.getElementById('regPassword').value;
+        if (!name || !email || !password) { alert('Заполните все поля'); return; }
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        if (users.find(u => u.email === email)) { alert('Email уже зарегистрирован'); return; }
+        const avatar = prompt('Вставьте ссылку на фото для аватара (необязательно):', DEFAULT_AVATAR_URL);
+        const newUser = { id: Date.now(), name, email, password, favorites: [], avatar: avatar || DEFAULT_AVATAR_URL };
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+        localStorage.setItem('currentUser', JSON.stringify(newUser));
+        currentUser = newUser;
+        updateAuthPopup();
+        closeModal('registerModal');
+        alert('Регистрация успешна!');
+    }
+
+    function login() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        if (!email || !password) { alert('Введите email и пароль'); return; }
+        const users = JSON.parse(localStorage.getItem('users') || '[]');
+        const user = users.find(u => u.email === email && u.password === password);
+        if (!user) { alert('Неверный email или пароль'); return; }
+        localStorage.setItem('currentUser', JSON.stringify(user));
+        currentUser = user;
+        updateAuthPopup();
+        closeModal('loginModal');
+        alert(`Добро пожаловать, ${user.name}!`);
+    }
+
+    function logout() {
+        localStorage.removeItem('currentUser');
+        currentUser = null;
+        updateAuthPopup();
+        alert('Вы вышли из системы');
+    }
+
+    function openProfile() {
+        if (!currentUser) return;
+        const favs = JSON.parse(localStorage.getItem(`favorites_${currentUser.id}`) || '[]');
+        alert(`Профиль: ${currentUser.name}\nEmail: ${currentUser.email}\nИзбранное: ${favs.length}`);
+    }
+
+    function openModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) modal.style.display = 'flex';
+    }
+    function closeModal(id) {
+        const modal = document.getElementById(id);
+        if (modal) modal.style.display = 'none';
+    }
+
+    document.getElementById('authIcon')?.addEventListener('click', openAuthPopup);
+    window.onclick = function(e) {
+        if (e.target.classList && e.target.classList.contains('modal')) {
+            e.target.style.display = 'none';
+        }
+        if (!e.target.closest('.float-auth')) closeAuthPopup();
+    }
+
+    loadUser();
+</script>
+</body>
+</html>
